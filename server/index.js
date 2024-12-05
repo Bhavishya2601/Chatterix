@@ -10,6 +10,7 @@
     import session from 'express-session'
 
     import authRoutes from './routes/authRoutes.js'
+    import userRoutes from './routes/userRoutes.js'
     // import messageRoutes from './routes/messageRoutes.js'
 
     const port = parseInt(process.env.PORT)
@@ -61,6 +62,7 @@
     startServer()
 
     app.use('/auth', authRoutes)
+    app.use('/user', userRoutes)
     // app.use('/api/messages', messageRoutes)
 
     // io.on('connection', (socket)=>{

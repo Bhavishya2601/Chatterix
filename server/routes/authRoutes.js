@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import GoogleStrategy from 'passport-google-oauth2'
 import GithubStrategy from 'passport-github2'
 import DiscordStrategy from 'passport-discord'
+import TwitterStrategy from 'passport-twitter'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -34,7 +35,7 @@ router.get('/:provider/main', (req, res, next)=>{
             res.redirect(`${process.env.FRONTEND_URL}/signup`)
         }
         const token = generateToken(user)
-        res.cookie('talkora', token, {
+        res.cookie('chatterix', token, {
             httpOnly: true,
             secure: true,
             maxAge: 24*60*60*1000,
@@ -55,6 +56,10 @@ router.get('/github', passport.authenticate("github", {
 router.get('/discord', (req, res)=>{
     res.redirect('https://discord.com/oauth2/authorize?client_id=1313887480726028389&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fdiscord%2Fmain&scope=identify+email')
 })
+
+router.get('/twitter', passport.authenticate("twitter", {
+    scope: ['tweet.read', 'users.read', 'offline.access']  
+}))
 
 passport.use("google", new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -95,7 +100,6 @@ passport.use('github', new GithubStrategy({
         const email = emails.find(email => email.primary && email.verified)?.email
 
         let user = await User.findOne({email})
-        console.log(user)
         if (user){
             return cb(null, user)
         }
@@ -139,6 +143,14 @@ passport.use('discord', new DiscordStrategy({
         cb(null, false, {message:"Failed to log in with discord"})
     }
     
+}))
+
+passport.use("twitter", new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CLIENT_ID,
+    consumerSecret: process.env.TWITTER_CLIENT_SECRET,
+    callbackURL: '/auth/twitter/main'
+}, async (accessToken, refreshToken, profile, cb)=>{
+    console.log(profile)
 }))
 
 passport.serializeUser((user, cb)=>{
