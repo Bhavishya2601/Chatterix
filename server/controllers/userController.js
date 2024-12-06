@@ -53,15 +53,28 @@ export const setAvatar = async (req, res) => {
 }
 
 export const allUsers = async (req, res)=>{
-    console.log(req.params)
     try{
         const AllUsers = await User.find({_id:{$ne:req.params.id}}).select([
             "email", "name", "avatarImage", "_id"
         ])
-        console.log(AllUsers)
         res.json(AllUsers)
     } catch(err){
         console.log('Error fetching all the users', err.message)
         res.json({err: 'Something Went wrong'})
     } 
+}
+
+export const logout = async (req, res) => {
+    try{
+        res.cookie('chatterix', '', {
+            httpOnly: true,
+            secure: true,
+            maxAge: 0,
+            sameSite: 'None'
+        })
+        res.status(200).json({message: 'Successfully Logged Out'})
+    } catch (err){
+        console.log('Something Went Wrong While Logging Out', err.message)
+        res.status(500).json({error: 'Something Went Wrong'})
+    }
 }

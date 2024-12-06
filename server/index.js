@@ -4,6 +4,7 @@
     import express from "express"
     import http from "http"
     import {Server} from "socket.io"
+    import MongoStore from 'connect-mongo'
     import cors from "cors"
     import cookieParser from 'cookie-parser'
     import mongoose from 'mongoose'
@@ -11,7 +12,7 @@
 
     import authRoutes from './routes/authRoutes.js'
     import userRoutes from './routes/userRoutes.js'
-    // import messageRoutes from './routes/messageRoutes.js'
+    import msgRoutes from './routes/messagesRoute.js'
 
     const port = parseInt(process.env.PORT)
     const app = express()
@@ -35,14 +36,18 @@
         allowedHeaders: ['Content-Type', 'Authorization']
     }))
 
-
-    // app.use(passport.initialize())
-    // app.use(passport.session())
-
     app.use(session({
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGODB_URI,
+            ttl: 14*24*60*60
+        }),
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
+        cookie: {
+            secure: true,
+            maxAge: 14*24*60*60*1000
+        }
     }))
 
     const startServer = async () => {
@@ -63,6 +68,7 @@
 
     app.use('/auth', authRoutes)
     app.use('/user', userRoutes)
+    app.use('/messages', msgRoutes)
     // app.use('/api/messages', messageRoutes)
 
     // io.on('connection', (socket)=>{

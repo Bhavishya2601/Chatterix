@@ -5,19 +5,34 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 import AllContacts from '../components/AllContacts'
+import Welcome from '../components/Welcome'
+import ChatContainer from '../components/ChatContainer'
 
 const Chat = () => {
   const navigate = useNavigate()
   const {userData, isLoading} = useUser()
   const [contacts, setContacts] = useState([])
+  const [currentChat, setCurrentChat] = useState(undefined)
 
   useEffect(()=>{
-    fetchContacts()
+    if (Object.entries(userData).length===0 && !isLoading){
+      navigate('/')
+    }
   }, [])
 
+  useEffect(()=>{
+    if (userData && !isLoading){
+      if(userData.isAvatarSet){
+        fetchContacts()
+      } else {
+        navigate('/setAvatar')
+      }
+    }
+  }, [userData, isLoading])
+
   const fetchContacts =async () => {
-    const response = axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/allUsers/${userData._id}`)
-    console.log('hello', response.data)
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/allUsers/${userData._id}`)
+    setContacts(response.data)
   }
 
   useEffect(()=>{
@@ -26,12 +41,26 @@ const Chat = () => {
     }
   },[userData, isLoading])
 
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat)
+  }
+
   return (
     <div>
-      chat
-      <br/><br/>
-      <Link to={'/setAvatar'}>avatar</Link>
-      {/* <AllContacts /> */}
+      <div className='flex'>
+        <div className='w-1/3'>
+
+      <AllContacts contacts={contacts} handleChatChange={handleChatChange} />
+        </div>
+      <div>
+        {
+          currentChat===undefined ? 
+          <Welcome /> :
+          <ChatContainer currentChat={currentChat} />
+
+        }
+      </div>
+      </div>
     </div>
   )
 }
