@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {useNavigate} from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import {io} from 'socket.io-client'
 
 import AllContacts from '../components/AllContacts'
 import Welcome from '../components/Welcome'
@@ -10,6 +11,7 @@ import ChatContainer from '../components/ChatContainer'
 
 const Chat = () => {
   const navigate = useNavigate()
+  const socket = useRef()
   const {userData, isLoading} = useUser()
   const [contacts, setContacts] = useState([])
   const [currentChat, setCurrentChat] = useState(undefined)
@@ -29,6 +31,16 @@ const Chat = () => {
       }
     }
   }, [userData, isLoading])
+
+  useEffect(()=>{
+    if (userData){
+      socket.current = io(`${import.meta.env.VITE_BACKEND_URL}`, {
+        transports: ['websocket'],
+        withCredentials: true
+      })
+      socket.current.emit("add-user", userData._id)
+    }
+  }, [userData])
 
   const fetchContacts =async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/allUsers/${userData._id}`)
@@ -56,7 +68,7 @@ const Chat = () => {
         {
           currentChat===undefined ? 
           <Welcome /> :
-          <ChatContainer currentChat={currentChat} />
+          <ChatContainer currentChat={currentChat} socket={socket}/>
 
         }
       </div>

@@ -4,6 +4,6 @@ import { AllMsg, AddMsg } from '../controllers/messageController.js'
 const router = express.Router()
 
 router.post('/addMsg', AddMsg)
-router.get('/allMsg', AllMsg)
+router.post('/allMsg', AllMsg)
 
 export default router
