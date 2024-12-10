@@ -26,7 +26,7 @@ const UserProvider = ({children}) => {
     }
 
   return (
-    <userContext.Provider value={{userData, setUserData, isLoading}}>
+    <userContext.Provider value={{userData, setUserData, isLoading, setIsLoading, setReTrigger}}>
       {children}
     </userContext.Provider>
   )

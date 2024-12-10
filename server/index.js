@@ -44,7 +44,9 @@ app.use(session({
 
 const startServer = async () => {
     try{
-        mongoose.connect(process.env.MONGODB_URI, {dbname: 'chatterix'})
+        mongoose.connect(process.env.MONGODB_URI, {
+            dbname: 'chatterix'
+        })
         .then(()=>{
             console.log('DB connected successfully')
             server.listen(port, ()=>{
@@ -85,7 +87,7 @@ io.on('connection', (socket)=>{
     socket.on("send-msg", (data)=>{
         const sendUsersSocket = onlineUsers.get(data.to)
         if (sendUsersSocket){
-            socket.to(sendUsersSocket).emit('msg-recieve', data.message)
+            socket.to(sendUsersSocket).emit('msg-recieve', data)
         }
     })
 })

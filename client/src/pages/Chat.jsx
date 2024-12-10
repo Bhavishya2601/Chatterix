@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 import AllContacts from '../components/AllContacts'
 import Welcome from '../components/Welcome'
@@ -12,28 +12,29 @@ import ChatContainer from '../components/ChatContainer'
 const Chat = () => {
   const navigate = useNavigate()
   const socket = useRef()
-  const {userData, isLoading} = useUser()
+  const { userData, isLoading } = useUser()
   const [contacts, setContacts] = useState([])
   const [currentChat, setCurrentChat] = useState(undefined)
 
-  useEffect(()=>{
-    if (Object.entries(userData).length===0 && !isLoading){
+  useEffect(() => {
+    if (Object.entries(userData).length === 0 && !isLoading) {
       navigate('/')
     }
   }, [])
 
-  useEffect(()=>{
-    if (userData && !isLoading){
-      if(userData.isAvatarSet){
+  useEffect(() => {
+    if (userData && !isLoading) {
+      if (userData.isAvatarSet) {
         fetchContacts()
       } else {
+        console.log('inside chat')
         navigate('/setAvatar')
       }
     }
   }, [userData, isLoading])
 
-  useEffect(()=>{
-    if (userData){
+  useEffect(() => {
+    if (userData) {
       socket.current = io(`${import.meta.env.VITE_BACKEND_URL}`, {
         transports: ['websocket'],
         withCredentials: true
@@ -42,16 +43,16 @@ const Chat = () => {
     }
   }, [userData])
 
-  const fetchContacts =async () => {
+  const fetchContacts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/allUsers/${userData._id}`)
     setContacts(response.data)
   }
 
-  useEffect(()=>{
-    if (!isLoading && Object.entries(userData).length===0){
+  useEffect(() => {
+    if (!isLoading && Object.entries(userData).length === 0) {
       navigate('/')
     }
-  },[userData, isLoading])
+  }, [userData, isLoading])
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat)
@@ -59,19 +60,17 @@ const Chat = () => {
 
   return (
     <div>
-      <div className='flex'>
-        <div className='w-1/3'>
-
-      <AllContacts contacts={contacts} handleChatChange={handleChatChange} />
+      <div className='px-16 py-10 h-screen flex bg-black font-manrope tracking-wide'>
+        <div className='w-[30%]'>
+          <AllContacts contacts={contacts} handleChatChange={handleChatChange} />
         </div>
-      <div>
-        {
-          currentChat===undefined ? 
-          <Welcome /> :
-          <ChatContainer currentChat={currentChat} socket={socket}/>
-
-        }
-      </div>
+        <div className='w-[70%]'>
+          {
+            currentChat === undefined ?
+              <Welcome /> :
+              <ChatContainer currentChat={currentChat} socket={socket} />
+          }
+        </div>
       </div>
     </div>
   )

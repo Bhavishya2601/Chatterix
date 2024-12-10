@@ -1,8 +1,8 @@
 import React from 'react'
-import { BiPowerOff } from "react-icons/bi";
 import axios from 'axios';
 import toast from 'react-hot-toast'
 import { useUser } from '../context/UserContext';
+import { CiLogout } from "react-icons/ci";
 
 const Logout = () => {
     const {setUserData} = useUser()
@@ -22,7 +22,7 @@ const Logout = () => {
     }
   return (
     <div>
-      <BiPowerOff onClick={handleLogout} />
+      <CiLogout className='text-red-600 text-3xl font-bold cursor-pointer' onClick={handleLogout} />
     </div>
   )
 }

@@ -5,7 +5,6 @@ import {Toaster} from 'react-hot-toast'
 import Loading from './components/Loading'
 import UserProvider from './context/UserContext'
 
-const Home = lazy(() => import('./pages/Home'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Error = lazy(() => import('./pages/Error'))
 const Chat = lazy(() => import('./pages/Chat'))
@@ -20,8 +19,7 @@ function App() {
         <Toaster />
           <Suspense fallback={<Loading />} >
             <Routes>
-              <Route path={'/'} element={<Home />} />
-              <Route path={'/signup'} element={<Signup />} />
+              <Route path={'/'} element={<Signup />} />
               <Route path={'/chat'} element={<Chat />} />
               <Route path={'/setAvatar'} element={<SetAvatar />} />
               <Route path={'*'} element={<Error />} />

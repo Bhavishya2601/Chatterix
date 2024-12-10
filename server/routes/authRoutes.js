@@ -54,7 +54,7 @@ router.get('/github', passport.authenticate("github", {
 }))
 
 router.get('/discord', (req, res)=>{
-    res.redirect('https://discord.com/oauth2/authorize?client_id=1313887480726028389&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fdiscord%2Fmain&scope=identify+email')
+    res.redirect(`${process.env.DISCORD_REDIRECT_URL}`)
 })
 
 router.get('/twitter', passport.authenticate("twitter", {
