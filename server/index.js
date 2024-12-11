@@ -21,25 +21,12 @@ const server = http.createServer(app)
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
+
 app.use(cors({
-    origin: `${process.env.FRONTEND_URL || 'http://localhost:5173'}`,
+    origin: `${process.env.FRONTEND_URL || '*'}`,
     credentials: true,
     methods: ['GET', 'POST', 'UPDATE', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}))
-
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        ttl: 14*24*60*60
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 14*24*60*60*1000
-    }
 }))
 
 const startServer = async () => {
@@ -59,6 +46,20 @@ const startServer = async () => {
 }
 
 startServer()
+
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        ttl: 14*24*60*60
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 14*24*60*60*1000
+    }
+}))
 
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)

@@ -98,8 +98,8 @@ const SetAvatar = () => {
                     }}
                 />
                 <div className='z-10 flex flex-col justify-center items-center gap-10'>
-                    <div className='text-white text-3xl font-semibold'>Pick an avatar as your profile picture</div>
-                    <div className='flex justify-center gap-5 items-center'>
+                    <div className='text-white text-lg xxs:text-2xl md:text-3xl font-semibold'>Pick an avatar as your profile picture</div>
+                    <div className='flex flex-wrap justify-center gap-5 items-center'>
                         {avatar.map((data, index) => {
                             return (
                                 <div key={index} className={`cursor-pointer p-1 rounded-full transition-all duration-500 border-4 ${selectedAvatar === index ? " border-white" : "border-transparent"}`} onClick={() => setSelectedAvatar(index)}>
@@ -108,7 +108,7 @@ const SetAvatar = () => {
                             )
                         })}
                     </div>
-                    <div className='p-2 border-2 bg-transparent text-white hover:bg-[#f7f7f743] transition-all duration-300 text-xl' onClick={setProfilePicture}>Set as Profile Picture</div>
+                    <div className='p-2 border-2 bg-transparent text-white hover:bg-[#f7f7f743] transition-all duration-300 sm:text-xl' onClick={setProfilePicture}>Set as Profile Picture</div>
                 </div>
             </div>
     )

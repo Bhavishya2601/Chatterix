@@ -3,8 +3,10 @@ import ChatInput from './ChatInput'
 import axios from 'axios'
 import { useUser } from '../context/UserContext'
 import { v4 as uuid } from 'uuid'
+import { IoIosArrowBack } from "react-icons/io";
 
-const ChatContainer = ({ currentChat, socket }) => {
+const ChatContainer = ({ data }) => {
+    const { currentChat, socket, showChat, setShowChat } = data
     const { userData } = useUser()
     const [messages, setMessages] = useState([])
     const [arrivalMsg, setArrivalMsg] = useState(null)
@@ -72,22 +74,28 @@ const ChatContainer = ({ currentChat, socket }) => {
 
     return (
         <>
-            <div className='flex flex-col text-white px-5 h-full justify-between'>
+            <div className='flex flex-col text-white px-5 py-5 md:py-0 h-full justify-between'>
                 <div className='flex gap-5 items-center'>
+                    {showChat && (
+                        <div className='block md:hidden'>
+                            <IoIosArrowBack className='text-2xl font-black' onClick={() => { setShowChat(false) }} />
+                        </div>
+                    )}
                     <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt="avatar" className='h-12' />
                     <div className='text-lg'>{currentChat.name}</div>
                 </div>
-                <div className='h-full py-5 overflow-auto'>
-                    {messages.map((msg) => {
-                        return (
-                            <div ref={scrollRef} key={uuid()}>
-                                <div>
-                                    {/* {console.log(msg.fromSelf, msg.message)} */}
-                                    {msg.message}
+                <div className='px-2 h-[75vh] md:h-[80vh] overflow-auto'>
+                    <div className='py-5 min-h-full flex flex-col justify-end'>
+                        {messages.map((msg) => {
+                            return (
+                                <div ref={scrollRef} key={uuid()} className={`my-1 w-full flex ${msg.fromSelf ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`bg-slate-800 p-2 max-w-[80%] break-words break-all ${msg.fromSelf === true ? 'rounded-b-xl rounded-tl-xl' : 'rounded-b-xl rounded-tr-xl'}`}>
+                                        {msg.message}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                    </div>
                 </div>
                 <ChatInput handleSendMsg={handleSendMsg} />
             </div>

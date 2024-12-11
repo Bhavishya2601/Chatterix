@@ -15,6 +15,7 @@ const Chat = () => {
   const { userData, isLoading } = useUser()
   const [contacts, setContacts] = useState([])
   const [currentChat, setCurrentChat] = useState(undefined)
+  const [showChat, setShowChat] = useState(false)
 
   useEffect(() => {
     if (Object.entries(userData).length === 0 && !isLoading) {
@@ -56,19 +57,20 @@ const Chat = () => {
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat)
+    setShowChat(true)
   }
 
   return (
     <div>
-      <div className='px-16 py-10 h-screen flex bg-black font-manrope tracking-wide'>
-        <div className='w-[30%]'>
+      <div className='md:px-5 xl:px-16 md:py-10 h-screen flex bg-black font-manrope tracking-wide'>
+        <div className={`min-w-[300px] w-full md:w-2/5 xl:w-[30%] ${showChat ? 'hidden md:block' : 'block'}`}>
           <AllContacts contacts={contacts} handleChatChange={handleChatChange} />
         </div>
-        <div className='w-[70%]'>
+        <div className={`${showChat ? 'block' : 'hidden'} w-full md:block md:w-3/5 xl:w-[70%]`}>
           {
             currentChat === undefined ?
               <Welcome /> :
-              <ChatContainer currentChat={currentChat} socket={socket} />
+              <ChatContainer data={{currentChat, socket, showChat, setShowChat}} />
           }
         </div>
       </div>

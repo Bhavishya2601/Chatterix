@@ -44,10 +44,10 @@ const ChatInput = ({ handleSendMsg }) => {
             )}
             <div ref={inputContainerRef} className='flex gap-2 items-center'>
                 <div onClick={() => { setShowEmojiPicker(prev => !prev) }}>
-                    <FaSmile className='text-yellow-300 text-3xl cursor-pointer' />
+                    <FaSmile className='text-[#f2b830] text-3xl cursor-pointer' />
                 </div>
                 <form className='flex w-full bg-slate-800 rounded-lg' onSubmit={(e) => sendChat(e)}>
-                    <input type="text" className='rounded-lg w-full bg-slate-800 py-2 px-2 outline-none text-white' placeholder='Type your message here' value={msg} onChange={(e) => setMsg(e.target.value)} />
+                    <input type="text" className='rounded-lg w-full bg-slate-800 py-2 px-2 outline-none text-white' placeholder='Type a message' value={msg} onChange={(e) => setMsg(e.target.value)} />
                     <button type='submit' className='px-8 rounded-xl bg-[#9086f5]'><IoSend className='text-xl' /></button>
                 </form>
             </div>
