@@ -19,15 +19,15 @@ const AllContacts = ({ contacts, handleChatChange }) => {
           <img src="/logo.png" alt="Chatterix" className='h-12' />
           <div className='text-3xl font-semibold'>Chatterix</div>
         </div>
-        <div className='flex flex-col gap-1 p-1 h-[73vh] md:h-[60vh] overflow-auto '>
-          {contacts.map((contact, index) => {
-            return (
+        <div className='flex flex-col gap-1 p-1 h-[73vh] md:h-[60vh] overflow-auto scrollbar-dark-blue'>
+          {contacts.map((contact, index) => (
+            contact.isAvatarSet && (
               <div key={index} className={`bg-slate-700 p-2 flex gap-5 items-center rounded-xl cursor-pointer ${currentSelected === index ? 'md:bg-slate-500' : ""}`} onClick={() => changeCurrentChat(index, contact)}>
                 <div><img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="" className='h-12 lg:h-16' /></div>
                 <div className='text-lg lg:text-xl'>{contact.name}</div>
               </div>
             )
-          })}
+          ))}
         </div>
       </div>
       <div className='flex justify-between items-center'>

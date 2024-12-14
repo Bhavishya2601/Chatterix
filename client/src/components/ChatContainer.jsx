@@ -51,7 +51,6 @@ const ChatContainer = ({ data }) => {
     }, [currentChat, socket])
 
     useEffect(() => {
-        console.log('arrivalmsg', arrivalMsg)
         arrivalMsg && setMessages((prev) => [...prev, arrivalMsg])
     }, [arrivalMsg])
 
@@ -84,7 +83,7 @@ const ChatContainer = ({ data }) => {
                     <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt="avatar" className='h-12' />
                     <div className='text-lg'>{currentChat.name}</div>
                 </div>
-                <div className='px-2 h-[75vh] md:h-[80vh] overflow-auto'>
+                <div className='px-2 h-[75vh] md:h-[80vh] overflow-auto scrollbar-dark-blue'>
                     <div className='py-5 min-h-full flex flex-col justify-end'>
                         {messages.map((msg) => {
                             return (

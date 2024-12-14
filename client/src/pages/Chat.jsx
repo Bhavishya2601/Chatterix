@@ -28,7 +28,6 @@ const Chat = () => {
       if (userData.isAvatarSet) {
         fetchContacts()
       } else {
-        console.log('inside chat')
         navigate('/setAvatar')
       }
     }

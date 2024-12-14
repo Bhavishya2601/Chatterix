@@ -55,7 +55,7 @@ export const setAvatar = async (req, res) => {
 export const allUsers = async (req, res)=>{
     try{
         const AllUsers = await User.find({_id:{$ne:req.params.id}}).select([
-            "email", "name", "avatarImage", "_id"
+            "email", "name", "isAvatarSet", "avatarImage", "_id"
         ])
         res.json(AllUsers)
     } catch(err){

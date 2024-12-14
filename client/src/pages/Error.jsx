@@ -1,9 +1,15 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Error = () => {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    navigate('/chat')
+  }, [])
+  
   return (
     <div>
-      Error
+      404 Error not found
     </div>
   )
 }
