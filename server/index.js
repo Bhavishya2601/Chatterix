@@ -33,7 +33,7 @@ app.use(cors({
 
 const connectToDB = async () => {
     try{
-        mongoose.connect(process.env.MONGODB_URI, {
+        await mongoose.connect(process.env.MONGODB_URI, {
             dbname: 'chatterix'
         })
         console.log('DB connected successfully')

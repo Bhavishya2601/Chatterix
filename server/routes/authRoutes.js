@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken'
 import GoogleStrategy from 'passport-google-oauth2'
 import GithubStrategy from 'passport-github2'
 import DiscordStrategy from 'passport-discord'
-import TwitterStrategy from 'passport-twitter'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -56,10 +55,6 @@ router.get('/github', passport.authenticate("github", {
 router.get('/discord', (req, res)=>{
     res.redirect(`${process.env.DISCORD_REDIRECT_URL}`)
 })
-
-router.get('/twitter', passport.authenticate("twitter", {
-    scope: ['tweet.read', 'users.read', 'offline.access']  
-}))
 
 passport.use("google", new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -143,14 +138,6 @@ passport.use('discord', new DiscordStrategy({
         cb(null, false, {message:"Failed to log in with discord"})
     }
     
-}))
-
-passport.use("twitter", new TwitterStrategy({
-    consumerKey: process.env.TWITTER_CLIENT_ID,
-    consumerSecret: process.env.TWITTER_CLIENT_SECRET,
-    callbackURL: '/auth/twitter/main'
-}, async (accessToken, refreshToken, profile, cb)=>{
-    console.log(profile)
 }))
 
 passport.serializeUser((user, cb)=>{
