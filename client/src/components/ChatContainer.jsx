@@ -10,6 +10,7 @@ const ChatContainer = ({ data }) => {
     const { userData } = useUser()
     const [messages, setMessages] = useState([])
     const [arrivalMsg, setArrivalMsg] = useState(null)
+    const [enlargedImage, setEnlargedImage] = useState(null)
     const scrollRef = useRef()
 
     const handleSendMsg = async (msg) => {
@@ -58,6 +59,18 @@ const ChatContainer = ({ data }) => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" })
     }, [messages])
 
+    const isImageUrl = (url) => {
+        return /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+    }
+
+    const handleImageClick = (url) => {
+        setEnlargedImage(url)
+    }
+
+    const closeEnlargedImage = () => {
+        setEnlargedImage(null)
+    }
+
     useEffect(() => {
         const fetchMsg = async () => {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/messages/allMsg`, {
@@ -86,10 +99,20 @@ const ChatContainer = ({ data }) => {
                 <div className='px-2 h-[75vh] md:h-[80vh] overflow-auto scrollbar-dark-blue'>
                     <div className='py-5 min-h-full flex flex-col justify-end'>
                         {messages.map((msg) => {
+                        
                             return (
                                 <div ref={scrollRef} key={uuid()} className={`my-1 w-full flex ${msg.fromSelf ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`bg-slate-800 p-2 max-w-[80%] break-words break-all ${msg.fromSelf === true ? 'rounded-b-xl rounded-tl-xl' : 'rounded-b-xl rounded-tr-xl'}`}>
-                                        {msg.message}
+                                        {isImageUrl(msg.message) ? (
+                                            <img
+                                                src={msg.message}
+                                                alt="message image"
+                                                className="max-w-[200px] max-h-[200px] rounded-lg cursor-pointer"
+                                                onClick={() => handleImageClick(msg.message)} 
+                                            />
+                                        ) : (
+                                            msg.message 
+                                        )}
                                     </div>
                                 </div>
                             )
@@ -98,6 +121,15 @@ const ChatContainer = ({ data }) => {
                 </div>
                 <ChatInput handleSendMsg={handleSendMsg} />
             </div>
+            {enlargedImage && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={closeEnlargedImage}>
+                    <img
+                        src={enlargedImage}
+                        alt="enlarged"
+                        className="max-w-[90%] max-h-[90%] object-contain"
+                    />
+                </div>
+            )}
         </>
     )
 }
